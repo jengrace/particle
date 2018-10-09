@@ -12,6 +12,7 @@ import './_vuex-cryptos.twig';
 import './_vue-cryptos.twig';
 import './_vue-cards.twig';
 import './_vue-clock.twig';
+import './_vue-fragrance.twig';
 
 // Module styles
 import './_vue-widget.scss';
@@ -21,6 +22,7 @@ import FacetTableVue from './src/vue-cryptos';
 import FacetTableVueX from './src/vuex-cryptos';
 import VueCards from './src/vue-cards';
 import VueClock from './src/vue-clock';
+import VueFragranceCombiner from './src/vue-fragrance';
 
 // Render Vue elements as soon as possible
 if (document.getElementById('vue-cryptos')) {
@@ -34,6 +36,9 @@ if (document.getElementById('vue-cards')) {
 }
 if (document.getElementById('vue-clock')) {
   VueClock('#vue-clock');
+}
+if (document.getElementById('vue-fragrance')) {
+  VueFragranceCombiner('#vue-fragrance');
 }
 
 export const name = 'vue-widget';
