@@ -1,39 +1,96 @@
 <template>
-  <div class="fragrance-combiner row no-gutters">
+  <div class="fragrance-combiner">
 
-    <div
-      v-for="category in spectrum"
-      :key="category.category"
-      class="spectrum-category col text-center text-uppercase"
-    >
-      <div class="spectrum-category__images d-flex">
-        <div
-          v-for="fragrance in category.fragrances"
-          :key="fragrance.id"
-          :style="{backgroundImage: `url(${imgUrlSpectrum}/${ fragrance.img.spectrum})`}"
-          class="spectrum-category__image h-100"
-          :class="{highlighted: fragrance.isHighlighted}"
-          @mouseover="highlight(fragrance)"
-        />
-      </div>
+    <div class="row">
+      <h2 class="col text-center mb-5">Step 1. Choose your favorite fragrance</h2>
+    </div>
 
+    <div class="spectrum row no-gutters">
       <div
-        class="spectrum-category__category bg-light border border-secondary"
-        @mouseover="highlightCategory(category.category)"
+        v-for="category in spectrum"
+        :key="category.category"
+        class="spectrum-category col text-center text-uppercase"
       >
-        {{ category.category }}
-      </div>
+        <div class="spectrum-category__images d-flex">
+          <div
+            v-for="fragrance in category.fragrances"
+            :key="fragrance.id"
+            :style="{backgroundImage: `url(${imgUrl.spectrum}/${ fragrance.img.spectrum})`}"
+            class="spectrum-category__image h-100"
+            :class="{highlighted: fragrance.isHighlighted}"
+            @mouseover="highlight(fragrance)"
+            @click="choose(fragrance)"
+          />
+        </div>
 
-      <ul class="spectrum-category__text list-unstyled small">
-        <li
-          v-for="fragrance in category.fragrances"
-          :key="fragrance.id"
-          :class="{highlighted: fragrance.isHighlighted}"
-          @mouseover="highlight(fragrance)"
+        <div
+          class="spectrum-category__category border border-secondary"
+          :class="{'highlighted-category': category.isCatHighlighted}"
+          @mouseover="highlight(category.fragrances[0])"
         >
-          {{ fragrance.names.short }}
-        </li>
-      </ul>
+          {{ category.category }}
+        </div>
+
+        <ul class="spectrum-category__text list-unstyled small">
+          <li
+            v-for="fragrance in category.fragrances"
+            :key="fragrance.id"
+            :class="{highlighted: fragrance.isHighlighted}"
+            @mouseover="highlight(fragrance)"
+            @click="choose(fragrance)"
+          >
+            {{ fragrance.names.short }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="combiner">
+      <h2 class="text-center my-3">Step 2. Choose your combination</h2>
+      <div class="row justify-content-center">
+        <div class="25">
+          <form>
+            <div class="form-row align-items-center">
+              <div class="col-auto my-1">Make it</div>
+              <div class="col-auto my-1">
+                <label
+                  class="mr-sm-2 sr-only"
+                  for="inlineFormCustomSelect"
+                >Preference</label>
+                <select
+                  id="inlineFormCustomSelect"
+                  class="custom-select mr-2"
+                >
+                  <option selected>Warmer</option>
+                  <option>Fresher</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-3">
+        <div class="col-auto text-center">
+          <div>
+            <img
+              :src="`${imgUrl.combiner}/${chosen.img.combiner}`"
+              :alt="chosen.names.short"
+            >
+          </div>
+          <p class="text-uppercase bold"><strong>{{ chosen.names.long }}</strong></p>
+          <p class="text-capitalize">{{ chosen.cat }}</p>
+          <p>
+            <span
+              v-for="(size, cost) in chosen.price"
+              :key="chosen.id + size"
+              class="fragrance__size-price"
+            >
+              ${{ cost }} {{ size }}ml
+            </span>
+          </p>
+          <button class="btn btn-primary text-uppercase">Shop now</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -55,10 +112,12 @@ export default {
         'spicy',
         'woody',
       ],
-      imgUrlCombiner:
-        'https://www.jomalone.com/media/export/cms/fragrancecombiner/product_combiner_images',
-      imgUrlSpectrum:
-        'https://www.jomalone.com/media/export/cms/fragrancecombiner/spectrum_images',
+      imgUrl: {
+        combiner:
+          'https://www.jomalone.com/media/export/cms/fragrancecombiner/product_combiner_images',
+        spectrum:
+          'https://www.jomalone.com/media/export/cms/fragrancecombiner/spectrum_images',
+      },
     };
   },
   computed: {
@@ -71,6 +130,7 @@ export default {
           // For each category, generate object with category and frags
           .map(category => ({
             category,
+            isCatHighlighted: false,
             fragrances: this.starters
               .filter(({ cat: fragCategory }) => category === fragCategory)
               // Sort order of frags within cat
@@ -78,7 +138,17 @@ export default {
           }))
           // Only show categories which have fragrances
           .filter(category => !!category.fragrances.length)
+          // Highlight category if it contains any highlighted frag
+          .map(
+            category =>
+              category.fragrances.some(frag => frag.isHighlighted)
+                ? { ...category, isCatHighlighted: true }
+                : category
+          )
       );
+    },
+    chosen() {
+      return this.starters.find(frag => frag.isChosen);
     },
   },
   methods: {
@@ -89,13 +159,11 @@ export default {
         isHighlighted: frag.id === highlightedFrag.id,
       }));
     },
-    // To highlight cateogry, just highlight first frag in cat
-    highlightCategory(highlightedCategory) {
-      const firstFragInCat = this.spectrum.find(
-        cat => cat.category === highlightedCategory
-      ).fragrances[0];
-
-      this.highlight(firstFragInCat);
+    choose(chosenFrag) {
+      this.fragrances = this.fragrances.map(frag => ({
+        ...frag,
+        isChosen: frag.id === chosenFrag.id,
+      }));
     },
   },
 };
@@ -110,6 +178,9 @@ export default {
   background: center top no-repeat;
   background-size: 100% auto;
 }
+.spectrum-category__category {
+  background-color: theme-color(light);
+}
 .spectrum-category__image,
 .spectrum-category__text,
 .spectrum-category__category {
@@ -123,7 +194,10 @@ export default {
   text-decoration: underline;
 }
 .highlighted-category {
-  background-color: black;
-  color: white;
+  background-color: theme-color(dark);
+  color: theme-color(light);
+}
+.fragrance__size-price + .fragrance__size-price:before {
+  content: '/ ';
 }
 </style>

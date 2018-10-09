@@ -20,7 +20,8 @@ export default [
       fresher: 10066,
     },
     isStarter: true,
-    isHighlighted: false,
+    isHighlighted: true,
+    isChosen: true,
   },
   {
     id: 9900,
@@ -44,6 +45,7 @@ export default [
     },
     isStarter: true,
     isHighlighted: false,
+    isChosen: false,
   },
   {
     id: 10041,
@@ -67,6 +69,7 @@ export default [
     },
     isStarter: true,
     isHighlighted: false,
+    isChosen: false,
   },
   {
     id: 10066,
@@ -90,5 +93,30 @@ export default [
     },
     isStarter: true,
     isHighlighted: false,
+    isChosen: false,
+  },
+  {
+    id: 12553,
+    names: {
+      short: 'English Pear & Fresia',
+      long: 'English Pear & Fresia Cologne',
+    },
+    cat: 'fruity',
+    pizazz: 1,
+    img: {
+      combiner: 'englishpear.jpg',
+      spectrum: 'spectrum-english_pear_freesia.jpg',
+    },
+    price: {
+      30: 68.0,
+      100: 136.0,
+    },
+    companion: {
+      warmer: 27028,
+      fresher: 18848,
+    },
+    isStarter: true,
+    isHighlighted: false,
+    isChosen: false,
   },
 ];
