@@ -180,6 +180,7 @@ export default {
         isHighlighted: frag.id === highlightedFrag.id,
       }));
     },
+    // To highlight cateogry, just highlight first frag in cat
     highlightCategory(highlightedCategory) {
       const firstFragInCat = this.spectrum.find(
         cat => cat.category === highlightedCategory
@@ -211,5 +212,9 @@ export default {
 .highlighted {
   background-position: center bottom;
   text-decoration: underline;
+}
+.highlighted-category {
+  background-color: black;
+  color: white;
 }
 </style>
