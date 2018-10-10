@@ -17,7 +17,7 @@
             :key="fragrance.id"
             :style="{backgroundImage: `url(${imgUrl.spectrum}/${ fragrance.img.spectrum})`}"
             class="spectrum-category__image h-100"
-            :class="{highlighted: fragrance.isHighlighted}"
+            :class="{highlighted: fragrance.isHighlighted, chosen: fragrance.isChosen}"
             @mouseover="highlight(fragrance)"
             @click="choose(fragrance)"
           />
@@ -35,7 +35,7 @@
           <li
             v-for="fragrance in category.fragrances"
             :key="fragrance.id"
-            :class="{highlighted: fragrance.isHighlighted}"
+            :class="{highlighted: fragrance.isHighlighted, chosen: fragrance.isChosen}"
             @mouseover="highlight(fragrance)"
             @click="choose(fragrance)"
           >
@@ -56,21 +56,25 @@
                 <label
                   class="mr-sm-2 sr-only"
                   for="inlineFormCustomSelect"
-                >Preference</label>
+                >Select companion fragrance</label>
                 <select
                   id="inlineFormCustomSelect"
+                  v-model="companion"
                   class="custom-select mr-2"
                 >
-                  <option selected>Warmer</option>
-                  <option>Fresher</option>
+                  <option
+                    selected
+                    value="warmer"
+                  >Warmer</option>
+                  <option value="fresher">Fresher</option>
                 </select>
               </div>
             </div>
           </form>
         </div>
       </div>
-      <div class="row justify-content-center mt-3">
-        <div class="col-auto text-center">
+      <div class="row justify-content-center no-gutters mt-3">
+        <div class="fragrance fragrance--combiner col-auto text-center">
           <div>
             <img
               :src="`${imgUrl.combiner}/${chosen.img.combiner}`"
@@ -90,6 +94,26 @@
           </p>
           <button class="btn btn-primary text-uppercase">Shop now</button>
         </div>
+        <div class="fragrance fragrance--combiner col-auto text-center">
+          <div>
+            <img
+              :src="`${imgUrl.combiner}/${companionFrag.img.combiner}`"
+              :alt="companionFrag.names.short"
+            >
+          </div>
+          <p class="text-uppercase bold"><strong>{{ companionFrag.names.long }}</strong></p>
+          <p class="text-capitalize">{{ companionFrag.cat }}</p>
+          <p>
+            <span
+              v-for="(size, cost) in companionFrag.price"
+              :key="companionFrag.id + size"
+              class="fragrance__size-price"
+            >
+              ${{ cost }} {{ size }}ml
+            </span>
+          </p>
+          <button class="btn btn-primary text-uppercase">Shop now</button>
+        </div>
       </div>
     </div>
 
@@ -97,7 +121,7 @@
 </template>
 
 <script>
-import fragrances from './fragrances';
+import fragrances, { fallbackFrag } from './fragrances';
 
 export default {
   name: 'VueFragranceCombining',
@@ -118,6 +142,7 @@ export default {
         spectrum:
           'https://www.jomalone.com/media/export/cms/fragrancecombiner/spectrum_images',
       },
+      companion: 'warmer',
     };
   },
   computed: {
@@ -150,6 +175,13 @@ export default {
     chosen() {
       return this.starters.find(frag => frag.isChosen);
     },
+    companionFrag() {
+      return (
+        this.fragrances.find(
+          ({ id }) => this.chosen.companion[this.companion] === id
+        ) || fallbackFrag
+      );
+    },
   },
   methods: {
     // Choose a frag, only one at a time
@@ -160,6 +192,7 @@ export default {
       }));
     },
     choose(chosenFrag) {
+      this.companion = 'warmer';
       this.fragrances = this.fragrances.map(frag => ({
         ...frag,
         isChosen: frag.id === chosenFrag.id,
@@ -186,10 +219,10 @@ export default {
 .spectrum-category__category {
   cursor: pointer;
 }
-.chosen {
-}
+
 // Combine for image and text since they don't affect each other
-.highlighted {
+.highlighted,
+.chosen {
   background-position: center bottom;
   text-decoration: underline;
 }

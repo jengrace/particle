@@ -1,3 +1,28 @@
+export const fallbackFrag = {
+  id: 99999,
+  names: {
+    short: 'Fallback',
+    long: 'Fallback Cologne',
+  },
+  cat: 'citrus',
+  pizazz: 0,
+  img: {
+    combiner: 'limebasilmandarin.jpg',
+    spectrum: 'spectrum-lime_basil.jpg',
+  },
+  price: {
+    30: 68.0,
+    100: 136.0,
+  },
+  companion: {
+    warmer: undefined,
+    fresher: undefined,
+  },
+  isStarter: false,
+  isHighlighted: false,
+  isChosen: false,
+};
+
 export default [
   {
     id: 10101,
@@ -114,6 +139,30 @@ export default [
     companion: {
       warmer: 27028,
       fresher: 18848,
+    },
+    isStarter: true,
+    isHighlighted: false,
+    isChosen: false,
+  },
+  {
+    id: 27028,
+    names: {
+      short: 'Peony & Blush Suede',
+      long: 'Peony & Blush Suede Cologne',
+    },
+    cat: 'floral',
+    pizazz: 1,
+    img: {
+      combiner: 'peonyblushsuede.jpg',
+      spectrum: 'spectrum-peony_blush_suede.jpg',
+    },
+    price: {
+      30: 68.0,
+      100: 136.0,
+    },
+    companion: {
+      warmer: 9900,
+      fresher: 10041,
     },
     isStarter: true,
     isHighlighted: false,
