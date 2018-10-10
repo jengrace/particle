@@ -159,7 +159,7 @@ export default {
             fragrances: this.starters
               .filter(({ cat: fragCategory }) => category === fragCategory)
               // Sort order of frags within cat
-              .sort(({ pizazz }) => pizazz),
+              .sort(({ pizazz: a }, { pizazz: b }) => a - b),
           }))
           // Only show categories which have fragrances
           .filter(category => !!category.fragrances.length)

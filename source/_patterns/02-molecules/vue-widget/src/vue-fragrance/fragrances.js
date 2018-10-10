@@ -168,4 +168,28 @@ export default [
     isHighlighted: false,
     isChosen: false,
   },
+  {
+    id: 15968,
+    names: {
+      short: 'Earl Grey & Cucumber',
+      long: 'Earl Grey & Cucumber Cologne',
+    },
+    cat: 'citrus',
+    pizazz: 2,
+    img: {
+      combiner: 'earlgreycucumber.jpg',
+      spectrum: 'spectrum-earl_grey_cucumber.jpg',
+    },
+    price: {
+      30: 68.0,
+      100: 136.0,
+    },
+    companion: {
+      warmer: undefined,
+      fresher: 10041,
+    },
+    isStarter: true,
+    isHighlighted: false,
+    isChosen: false,
+  },
 ];
